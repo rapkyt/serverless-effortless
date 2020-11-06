@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "serverless-effortless"
+version = "0.1.0"
+description = ""
+authors = ["Cristian Mora <rapkyt@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6.10"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+pre-commit = "^2.8.2"
+pytest = "^6.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

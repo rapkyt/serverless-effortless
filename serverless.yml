@@ -1,0 +1,42 @@
+service: serverless-effortless
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: python3.6
+  region: ${opt:region, 'us-west-2'}
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${self:custom.profiles.${self:provider.stage}}
+  # Memory allocated in lambda functions
+  memorySize: 512
+  logRetentionInDays: 30
+
+
+custom:
+  defaultStage: dev
+  pythonRequirements:
+    dockerizePip: true
+  profiles:
+    dev: serverless-effortless-dev
+
+functions:
+  hello:
+    handler: serverless.handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+
+package:
+  exclude:
+    - ./**
+  include:
+    - serverless/**
+    - '!serverless/.pytest_cache/**'
+    - '!serverless/tests/**'

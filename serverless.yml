@@ -32,6 +32,8 @@ custom:
     dev: serverless-effortless-dev
   dynamodb_table: ${self:service}-${opt:stage, self:provider.stage}
   dynamodb_resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb_table}"
+  dotenv:
+    basePath: config/
 
 functions:
   hello:
@@ -47,6 +49,16 @@ functions:
       - http:
           path: subscribe
           method: post
+
+  unsubscribe:
+    handler: serverless.handler.unsubscribe
+    events:
+      - http:
+          path: unsubscribe
+          method: delete
+
+plugins:
+  - serverless-dotenv-plugin
 
 package:
   exclude:

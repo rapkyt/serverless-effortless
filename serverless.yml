@@ -16,7 +16,13 @@ provider:
   # Memory allocated in lambda functions
   memorySize: 512
   logRetentionInDays: 30
-
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: ${self:custom.dynamodb_resource}
 
 custom:
   defaultStage: dev
@@ -24,6 +30,8 @@ custom:
     dockerizePip: true
   profiles:
     dev: serverless-effortless-dev
+  dynamodb_table: ${self:service}-${opt:stage, self:provider.stage}
+  dynamodb_resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb_table}"
 
 functions:
   hello:
@@ -33,6 +41,13 @@ functions:
           path: hello
           method: get
 
+  subscribe:
+    handler: serverless.handler.subscribe
+    events:
+      - http:
+          path: subscribe
+          method: post
+
 package:
   exclude:
     - ./**
@@ -40,3 +55,22 @@ package:
     - serverless/**
     - '!serverless/.pytest_cache/**'
     - '!serverless/tests/**'
+
+resources:
+  Resources:
+    NewsLetterDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: email
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}

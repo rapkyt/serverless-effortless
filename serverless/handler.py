@@ -1,5 +1,7 @@
 import json
 
+from serverless.project.subscribe import handler as subscribe
+
 
 def hello(event, context):
     body = {
@@ -8,3 +10,9 @@ def hello(event, context):
     }
     response = {"statusCode": 200, "body": json.dumps(body)}
     return response
+
+
+__all__ = [
+    "hello",
+    "subscribe",
+]

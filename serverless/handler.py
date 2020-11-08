@@ -1,6 +1,7 @@
 import json
 
 from serverless.project.subscribe import handler as subscribe
+from serverless.project.unsubscribe import handler as unsubscribe
 
 
 def hello(event, context):
@@ -15,4 +16,5 @@ def hello(event, context):
 __all__ = [
     "hello",
     "subscribe",
+    "unsubscribe",
 ]

@@ -7,13 +7,14 @@ import boto3
 from serverless import settings
 from serverless.project.utils import format_response
 
+logger = logging.getLogger(__name__)
 dynamodb = boto3.resource("dynamodb")
 
 
 def handler(event, context):
     data = json.loads(event["body"])
     if "email" not in data:
-        logging.error("Validation Failed")
+        logger.error("Validation Failed")
         return format_response(
             {"message": "Couldn't add the email to the newsletter."}, 400
         )

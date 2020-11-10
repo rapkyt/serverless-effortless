@@ -18,11 +18,16 @@ provider:
   logRetentionInDays: 30
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    MARKETING_S3_BUCKET: ${self:custom.marketing_s3}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:*
       Resource: ${self:custom.dynamodb_resource}
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: ${self:custom.marketing_s3_role_resource}
 
 custom:
   defaultStage: dev
@@ -32,6 +37,9 @@ custom:
     dev: serverless-effortless-dev
   dynamodb_table: ${self:service}-${opt:stage, self:provider.stage}
   dynamodb_resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb_table}"
+  marketing_s3: newsletter-marketing
+  marketing_s3_bucket_arn: arn:aws:s3:::${self:custom.marketing_s3}
+  marketing_s3_role_resource: ${self:custom.marketing_s3_bucket_arn}/*
   dotenv:
     basePath: config/
 
@@ -56,6 +64,13 @@ functions:
       - http:
           path: unsubscribe
           method: delete
+
+  send_email:
+    handler: serverless.handler.send_email
+    events:
+      - s3:
+          bucket: ${self:custom.marketing_s3}
+          event: s3:ObjectCreated:*
 
 plugins:
   - serverless-dotenv-plugin

@@ -1,5 +1,6 @@
 import json
 
+from serverless.project.send_email import handler as send_email
 from serverless.project.subscribe import handler as subscribe
 from serverless.project.unsubscribe import handler as unsubscribe
 
@@ -17,4 +18,5 @@ __all__ = [
     "hello",
     "subscribe",
     "unsubscribe",
+    "send_email",
 ]

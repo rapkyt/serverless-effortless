@@ -1,6 +1,5 @@
 import hashlib
 import logging
-import os
 
 import boto3
 
@@ -22,6 +21,6 @@ def handler(event, context):
         logger.error("Token is not valid.")
         return format_response({"message": "Token is not valid."}, 400)
 
-    table = dynamodb.Table(os.environ["DYNAMODB_TABLE"])
+    table = dynamodb.Table(settings.DYNAMODB_TABLE)
     table.delete_item(Key={"email": email})
     return format_response({}, 204)

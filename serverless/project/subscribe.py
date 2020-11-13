@@ -29,4 +29,4 @@ def handler(event, context):
     # write the email to the database
     table.put_item(Item=item)
     # create a response
-    return format_response(item)
+    return format_response(item, status_code=201)

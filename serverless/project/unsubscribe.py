@@ -23,4 +23,4 @@ def handler(event, context):
 
     table = dynamodb.Table(settings.DYNAMODB_TABLE)
     table.delete_item(Key={"email": email})
-    return format_response({}, 204)
+    return format_response(result=None, status_code=204)

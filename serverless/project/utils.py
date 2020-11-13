@@ -5,7 +5,8 @@ logger = logging.getLogger(__name__)
 
 
 def format_response(result, status_code=200):
-    result = json.dumps(result)
+    if result is not None:
+        result = json.dumps(result)
     return {"statusCode": status_code, "body": result}
 
 
